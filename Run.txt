@@ -1,0 +1,22 @@
+pip install flask
+python -m pip install flask
+python app.py
+git remote add origin https://github.com/nhietkhidu/web-device-manager.git
+git config --global user.email "plcvicemtamdiep@gmail.com"
+
+https://<tên-app>.onrender.com/download-db
+
+
+postgresql://device_db_neap_user:tynNT9JS0XDLdbxWvgzyvRiKY4Gy3Czt@dpg-d18nsah5pdvs73co69t0-a.oregon-postgres.render.com/device_db_neap
+
+
+Cách cập nhật lên Render sau khi sửa
+📍 Bước 1: Lưu thay đổi vào Git
+Mở terminal tại thư mục dự án đã kết nối với GitHub, sau đó chạy:
+
+
+git add .
+git commit -m "Cập nhật hiển thị đầy đủ thông số kỹ thuật"
+git push origin main
+💡 main là tên nhánh chính (nếu bạn dùng master, thay thế main thành master)
+

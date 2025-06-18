@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+{% block title %}Đăng nhập{% endblock %}
+{% block content %}
+  <h4>Đăng nhập</h4>
+  <form method="post">
+    <input name="username" placeholder="Tên đăng nhập" class="form-control mb-2" required>
+    <input name="password" type="password" placeholder="Mật khẩu" class="form-control mb-2" required>
+    <button type="submit" class="btn btn-primary">Đăng nhập</button>
+  </form>
+  {% for msg in get_flashed_messages() %}<div class="alert alert-warning mt-2">{{msg}}</div>{% endfor %}
+{% endblock %}

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Sửa lịch sử bảo dưỡng</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+  <div class="container">
+    <h3 class="text-primary mb-4">Sửa lịch sử bảo dưỡng</h3>
+
+    <!-- Để form upload được ảnh -->
+    <form method="post" enctype="multipart/form-data">
+      <!-- Thiết bị -->
+      <div class="mb-3">
+        <label class="form-label">Thiết bị</label>
+        <select name="device_id" class="form-select" required>
+          {% for d in devices %}
+            <option value="{{ d.id }}" {% if d.id == history.device_id %}selected{% endif %}>
+              {{ d.code }} - {{ d.name }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Ngày -->
+      <div class="mb-3">
+        <label class="form-label">Ngày bảo dưỡng</label>
+        <input type="date" name="date" class="form-control" value="{{ history.date }}" required>
+      </div>
+
+      <!-- Nội dung -->
+      <div class="mb-3">
+        <label class="form-label">Nội dung</label>
+        <textarea name="content" class="form-control" required>{{ history.content }}</textarea>
+      </div>
+
+      <!-- Người thực hiện -->
+      <div class="mb-3">
+        <label class="form-label">Người thực hiện</label>
+        <input type="text" name="performed_by" class="form-control" value="{{ history.performed_by }}" required>
+      </div>
+
+      <!-- Upload ảnh mới -->
+      <div class="mb-3">
+        <label class="form-label">Chọn ảnh mới (tuỳ chọn)</label>
+        <input type="file" name="image_file" class="form-control">
+      </div>
+
+      <!-- Hoặc nhập link ảnh -->
+      <div class="mb-3">
+        <label class="form-label">Hoặc nhập link ảnh (tuỳ chọn)</label>
+        <input type="text" name="image_link" class="form-control" placeholder="https://example.com/image.jpg">
+      </div>
+
+      <!-- Hiển thị ảnh hiện tại -->
+      {% if history.image_filename %}
+        <div class="mb-3">
+          <label class="form-label">Ảnh hiện tại:</label><br>
+          {% if '.jpg' in history.image_filename or '.png' in history.image_filename 
+              or '.jpeg' in history.image_filename or '.gif' in history.image_filename %}
+            <img src="{{ url_for('static', filename='uploads/' + history.image_filename) }}" style="max-width:150px;">
+          {% else %}
+            <a href="{{ history.image_filename }}" target="_blank">Link ảnh</a>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      <!-- Nút -->
+      <button type="submit" class="btn btn-success">Cập nhật</button>
+      <a href="{{ url_for('maintenance_all') }}" class="btn btn-secondary">Hủy</a>
+    </form>
+  </div>
+</body>
+</html>

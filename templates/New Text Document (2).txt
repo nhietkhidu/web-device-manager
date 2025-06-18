@@ -1,0 +1,12 @@
+<thead class="table-light">
+    <tr>
+      <th>Chọn</th>
+      {% if devices %}
+        {% for h in devices[0].keys() %}
+        <th>{{ h }}</th>
+        {% endfor %}
+      {% else %}
+        <th colspan="100%">Chưa có thiết bị nào</th>
+      {% endif %}
+    </tr>
+  </thead>

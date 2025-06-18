@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Lịch sử bảo dưỡng - {{ device.code }} ({{ device.name }})</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-4">
+  <div class="container">
+    <h3 class="mb-4 text-primary text-center">LỊCH SỬ BẢO DƯỠNG - {{ device.code }} ({{ device.name }})</h3>
+
+    {% if history %}
+      <table class="table table-bordered table-striped table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>Thiết bị</th>
+            <th>Ngày bảo dưỡng</th>
+            <th>Nội dung</th>
+            <th>Người thực hiện</th>
+<th>Ảnh</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for h in history %}
+          <tr>
+            <td>{{ device.code }} - {{ device.name }}</td>
+            <td>{{ h.date }}</td>
+            <td>{{ h.content }}</td>
+            <td>{{ h.performed_by }}</td>
+<td class="text-center">
+  {% if h.image and ('.jpg' in h.image or '.png' in h.image or '.jpeg' in h.image or '.gif' in h.image) %}
+    <img src="{{ url_for('static', filename='uploads/' + h.image) }}" style="max-width:100px;">
+  {% elif h.image %}
+    <a href="{{ h.image }}" target="_blank">Link ảnh</a>
+  {% else %}
+    -
+  {% endif %}
+</td>
+
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <div class="alert alert-info">Chưa có lịch sử bảo dưỡng nào.</div>
+    {% endif %}
+
+    <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">← Quay lại danh sách thiết bị</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý thiết bị</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    table {
+      table-layout: fixed;
+      width: 100%;
+    }
+    th, td {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    td {
+      white-space: normal;
+      overflow-wrap: break-word;
+    }
+  </style>
+</head>
+<body class="p-4">
+  <div class="container-fluid">
+
+    <!-- Sticky Header Section -->
+    <div class="sticky-top bg-white py-2 border-bottom" style="z-index: 1000;">
+      <h4 class="fw-bold text-primary mb-4 d-flex justify-content-between align-items-center">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="height: 50px;" class="me-3">
+        WEB QUẢN LÝ THIẾT BỊ NHIỆT KHÍ DƯ - XƯỞNG SỬA CHỮA - CTY XI MĂNG VICEM TAM ĐIỆP
+        <div>
+          {% if user %}
+            <span class="me-2">👋 Xin chào {{ user.username }}</span>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm">Đăng xuất</a>
+          {% else %}
+            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
+          {% endif %}
+        </div>
+      </h4>
+
+      <div class="mb-3">
+        <a href="{{ url_for('index') }}" class="btn btn-primary btn-sm">Danh sách thiết bị</a>
+        {% for s in stages %}
+          <a href="{{ url_for('index', stage=s) }}" class="btn btn-outline-primary btn-sm {% if s == selected_stage %}active{% endif %}">{{ s }}</a>
+        {% endfor %}
+      </div>
+
+      <div class="mb-3 d-flex flex-wrap gap-2">
+  	{% if user and user.role == 'admin' %}
+    	<a href="{{ url_for('add_device') }}" class="btn btn-success">Thêm thiết bị</a>
+    	<button type="submit" formaction="{{ url_for('edit_device') }}" form="deviceForm" class="btn btn-secondary">Sửa</button>
+    	<button type="submit" formaction="{{ url_for('delete_device') }}" form="deviceForm" class="btn btn-danger">Xoá</button>
+	<a href="{{ url_for('download_backup') }}" class="btn btn-outline-dark">Tải backup</a>  <!-- 🆕 -->
+  	{% endif %}
+
+  	<!-- Dòng này luôn hiển thị cho mọi người -->
+  	<a href="{{ url_for('maintenance_all') }}" class="btn btn-warning text-dark">Lịch sử bảo dưỡng</a>
+  	<a href="{{ url_for('export_excel') }}" class="btn btn-info text-white">Xuất Excel</a>
+  	<a href="{{ url_for('index') }}" class="btn btn-dark">Tải lại</a>
+      </div>
+      <form method="get" class="row g-2 mb-3">
+        <div class="col-md-2"><input type="text" name="code" placeholder="Mã thiết bị" class="form-control" value="{{ request.args.get('code', '') }}"></div>
+        <div class="col-md-2"><input type="text" name="name" placeholder="Tên thiết bị" class="form-control" value="{{ request.args.get('name', '') }}"></div>
+        <div class="col-md-2"><input type="text" name="status" placeholder="Tình trạng" class="form-control" value="{{ request.args.get('status', '') }}"></div>
+        <div class="col-md-2"><input type="text" name="year" placeholder="Năm SX" class="form-control" value="{{ request.args.get('year', '') }}"></div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-primary w-100">Lọc</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Table Section -->
+    <form method="post" id="deviceForm" action="{{ url_for('edit_device') }}">
+      <table class="table table-bordered table-striped table-hover align-middle mt-3">
+        <thead class="table-light text-center">
+          <tr>
+            <th style="width: 50px;">Chọn</th>
+            <th style="width: 50px;">ID</th>
+            <th style="width: 120px;">Mã thiết bị</th>
+            <th style="width: 150px;">Tên thiết bị</th>
+            <th style="width: 300px;">Thông số kỹ thuật</th>
+            <th style="width: 80px;">Loại</th>
+            <th style="width: 100px;">Hãng</th>
+            <th style="width: 50px;">Năm SX</th>
+            <th style="width: 100px;">Ngày sử dụng</th>
+            <th style="width: 100px;">Tình trạng</th>
+            <th style="width: 100px;">Vị trí</th>
+            <th style="width: 100px;">Link tài liệu</th>
+            <th style="width: 100px;">Công đoạn</th>
+            <th style="width: 80px;">Xem</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in devices %}
+          <tr>
+            <td class="text-center"><input type="radio" name="selected_id" value="{{ d.id }}" {% if selected_id and d.id|string == selected_id|string %}checked{% endif %}></td>
+            <td>{{ d.id }}</td>
+            <td>{{ d.code }}</td>
+            <td>{{ d.name }}</td>
+            <td><span style="display:inline-block; width:100%;">{{ d.specs }}</span></td>
+            <td>{{ d.category }}</td>
+            <td>{{ d.manufacturer }}</td>
+            <td>{{ d.year }}</td>
+            <td>{{ d.date_in_use }}</td>
+            <td>{{ d.status }}</td>
+            <td>{{ d.location }}</td>
+            <td><a href="{{ d.link }}" target="_blank">{{ d.link }}</a></td>
+            <td>{{ d.stage }}</td>
+            <td><a href="{{ url_for('device_history', device_id=d.id) }}" class="btn btn-sm btn-info">Xem</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </form>
+  </div>
+</body>
+</html>

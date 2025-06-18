@@ -1,0 +1,6 @@
+Flask
+gunicorn
+werkzeug
+pandas
+openpyxl
+psycopg2-binary

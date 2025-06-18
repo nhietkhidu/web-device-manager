@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Quản lý thiết bị</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
+  th, td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>
+
+</head>
+<body class="p-4">
+  <div class="container-fluid">
+    <h4 class="fw-bold text-primary mb-4 d-flex align-items-center">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" style="height: 50px;" class="me-3">
+      WEB QUẢN LÝ THIẾT BỊ NHIỆT KHÍ DƯ - XƯỞNG SỬA CHỮA - CTY XI MĂNG VICEM TAM ĐIỆP
+    </h4>
+
+    <div class="mb-3">
+      <a href="{{ url_for('index') }}" class="btn btn-primary btn-sm">Danh sách thiết bị</a>
+      {% for s in stages %}
+        <a href="{{ url_for('index', stage=s) }}" class="btn btn-outline-primary btn-sm {% if s == selected_stage %}active{% endif %}">{{ s }}</a>
+      
+
+          {% endfor %}
+    </div>
+
+    <form method="get" class="row g-2 mb-3">
+  <div class="col-md-2"><input type="text" name="code" placeholder="Mã thiết bị" class="form-control" value="{{ request.args.get('code', '') }}"></div>
+  <div class="col-md-2"><input type="text" name="name" placeholder="Tên thiết bị" class="form-control" value="{{ request.args.get('name', '') }}"></div>
+  <div class="col-md-2"><input type="text" name="status" placeholder="Tình trạng" class="form-control" value="{{ request.args.get('status', '') }}"></div>
+  <div class="col-md-2"><input type="text" name="year" placeholder="Năm SX" class="form-control" value="{{ request.args.get('year', '') }}"></div>
+  <div class="col-md-2">
+    <button type="submit" class="btn btn-primary w-100">Lọc</button>
+  </div>
+</form>
+
+<form method="post" action="{{ url_for('edit_device') }}">
+      <table class="table table-bordered table-striped table-hover align-middle">
+        <thead class="table-light text-center">
+          <tr>
+            <th style="width: 50px;">Chọn</th>
+            <th style="width: 50px;">ID</th>
+            <th style="width: 120px;">Mã thiết bị</th>
+            <th style="width: 150px;">Tên thiết bị</th>
+            <th style="width: 300px;">Thông số kỹ thuật</th>
+            <th style="width: 80px;">Loại</th>
+            <th style="width: 100px;">Hãng</th>
+            <th style="width: 50px;">Năm SX</th>
+            <th style="width: 100px;">Ngày sử dụng</th>
+            <th style="width: 100px;">Tình trạng</th>
+            <th style="width: 100px;">Vị trí</th>
+            <th style="width: 100px;">Link tài liệu</th>
+            <th style="width: 100px;">Công đoạn</th>
+            <th style="width: 80px;">Xem</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in devices %}
+          <tr>
+            <td class="text-center" style="width: 50px;">
+              <input type="radio" name="selected_id" value="{{ d.id }}" {% if selected_id and d.id|string == selected_id|string %}checked{% endif %}>
+            </td>
+            <td style="width: 50px;">{{ d.id }}</td>
+            <td style="width: 150px;">{{ d.code }}</td>
+            <td style="width: 150px;">{{ d.name }}</td>
+            <td><span style="display:inline-block; width:100%;">{{ d.specs }}</span></td>
+            <td style="width: 50px;">{{ d.category }}</td>
+            <td style="width: 50px;">{{ d.manufacturer }}</td>
+            <td style="width: 50px;">{{ d.year }}</td>
+            <td style="width: 150px;">{{ d.date_in_use }}</td>
+            <td style="width: 150px;">{{ d.status }}</td>
+            <td style="width: 150px;">{{ d.location }}</td>
+            <td style="width: 120px;"><a href="{{ d.link }}" target="_blank">{{ d.link }}</a></td>
+            <td style="width: 150px;">{{ d.stage }}</td>
+          <td style="width: 80px;"><a href="{{ url_for('device_history', device_id=d.id) }}" class="btn btn-sm btn-info">Xem</a></td></tr>
+          
+
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="mt-3">
+        <a href="{{ url_for('add_device') }}" class="btn btn-success">Thêm thiết bị</a>
+        <button type="submit" formaction="{{ url_for('edit_device') }}" class="btn btn-secondary">Sửa</button>
+        <button type="submit" formaction="{{ url_for('delete_device') }}" class="btn btn-danger">Xoá</button>
+        <a href="{{ url_for('maintenance_all') }}" class="btn btn-warning text-dark">Lịch sử bảo dưỡng</a>
+        <a href="{{ url_for('export_excel') }}" class="btn btn-info text-white">Xuất Excel</a>
+        <a href="{{ url_for('index') }}" class="btn btn-dark">Tải lại</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>
+
+<script>
+  function goToEdit() {
+    const selected = document.querySelector('input[name="selected_id"]:checked');
+    if (selected) {
+      window.location.href = "/edit/" + selected.value;
+    } else {
+      alert("Vui lòng chọn thiết bị cần sửa.");
+    }
+  }
+</script>
