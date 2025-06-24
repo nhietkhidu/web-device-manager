@@ -83,7 +83,7 @@ def index():
         query += " AND stage = ?"
         params.append(stage)
 
-    query += " ORDER BY id DESC LIMIT 10"
+    query += " ORDER BY id DESC LIMIT 1000"
 
     devices = conn.execute(query, tuple(params)).fetchall()
     conn.close()
