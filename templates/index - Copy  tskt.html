@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -17,12 +18,6 @@
     td {
       white-space: normal;
       overflow-wrap: break-word;
-      vertical-align: top;
-    }
-    .long-text {
-      white-space: pre-line;
-      max-height: 6em;
-      overflow-y: auto;
     }
   </style>
 </head>
@@ -52,17 +47,18 @@
       </div>
 
       <div class="mb-3 d-flex flex-wrap gap-2">
-        {% if user and user.role == 'admin' %}
-          <a href="{{ url_for('add_device') }}" class="btn btn-success">Thêm thiết bị</a>
-          <button type="submit" formaction="{{ url_for('edit_device') }}" form="deviceForm" class="btn btn-secondary">Sửa</button>
-          <button type="submit" formaction="{{ url_for('delete_device') }}" form="deviceForm" class="btn btn-danger">Xoá</button>
-          <a href="{{ url_for('download_backup') }}" class="btn btn-outline-dark">Tải backup</a>
-        {% endif %}
-        <a href="{{ url_for('maintenance_all') }}" class="btn btn-warning text-dark">Lịch sử bảo dưỡng</a>
-        <a href="{{ url_for('export_excel') }}" class="btn btn-info text-white">Xuất Excel</a>
-        <a href="{{ url_for('index') }}" class="btn btn-dark">Tải lại</a>
-      </div>
+  	{% if user and user.role == 'admin' %}
+    	<a href="{{ url_for('add_device') }}" class="btn btn-success">Thêm thiết bị</a>
+    	<button type="submit" formaction="{{ url_for('edit_device') }}" form="deviceForm" class="btn btn-secondary">Sửa</button>
+    	<button type="submit" formaction="{{ url_for('delete_device') }}" form="deviceForm" class="btn btn-danger">Xoá</button>
+	<a href="{{ url_for('download_backup') }}" class="btn btn-outline-dark">Tải backup</a>  <!-- 🆕 -->
+  	{% endif %}
 
+  	<!-- Dòng này luôn hiển thị cho mọi người -->
+  	<a href="{{ url_for('maintenance_all') }}" class="btn btn-warning text-dark">Lịch sử bảo dưỡng</a>
+  	<a href="{{ url_for('export_excel') }}" class="btn btn-info text-white">Xuất Excel</a>
+  	<a href="{{ url_for('index') }}" class="btn btn-dark">Tải lại</a>
+      </div>
       <form method="get" class="row g-2 mb-3">
         <div class="col-md-2"><input type="text" name="code" placeholder="Mã thiết bị" class="form-control" value="{{ request.args.get('code', '') }}"></div>
         <div class="col-md-2"><input type="text" name="name" placeholder="Tên thiết bị" class="form-control" value="{{ request.args.get('name', '') }}"></div>
@@ -102,7 +98,7 @@
             <td>{{ d.id }}</td>
             <td>{{ d.code }}</td>
             <td>{{ d.name }}</td>
-            <td><div class="long-text">{{ d.specs }}</div></td>
+            <td><span style="display:inline-block; width:100%;">{{ d.specs }}</span></td>
             <td>{{ d.category }}</td>
             <td>{{ d.manufacturer }}</td>
             <td>{{ d.year }}</td>

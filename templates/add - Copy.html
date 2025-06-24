@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -18,7 +19,9 @@
       ] %}
       <div class="mb-3">
         <label class="form-label">{{label}}</label>
-        <input type="text" class="form-control" name="{{field}}">
+        <input 
+          {% if field == 'date_in_use' %}type="date"{% else %}type="text"{% endif %}
+          class="form-control" name="{{field}}">
       </div>
       {% endfor %}
 

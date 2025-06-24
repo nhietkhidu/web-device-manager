@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -12,6 +11,7 @@
 
     <form method="post" action="{{ url_for('update_device') }}">
       <input type="hidden" name="id" value="{{ device.id }}">
+      
       {% for field, label in [
         ('code','Mã thiết bị'), ('name','Tên thiết bị'), ('specs','Thông số kỹ thuật'),
         ('category','Loại'), ('manufacturer','Hãng'), ('year','Năm SX'),
@@ -20,9 +20,14 @@
       ] %}
       <div class="mb-3">
         <label class="form-label">{{label}}</label>
-        <input 
-          {% if field == 'date_in_use' %}type="date"{% else %}type="text"{% endif %}
-          class="form-control" name="{{field}}" value="{{ device[field] }}">
+
+        {% if field == 'specs' %}
+          <textarea class="form-control" name="{{field}}" rows="12">{{ device[field] }}</textarea>
+        {% elif field == 'date_in_use' %}
+          <input type="date" class="form-control" name="{{field}}" value="{{ device[field] }}">
+        {% else %}
+          <input type="text" class="form-control" name="{{field}}" value="{{ device[field] }}">
+        {% endif %}
       </div>
       {% endfor %}
 
