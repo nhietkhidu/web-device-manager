@@ -20,3 +20,35 @@ git commit -m "Cập nhật hiển thị đầy đủ thông số kỹ thuật"
 git push origin main
 💡 main là tên nhánh chính (nếu bạn dùng master, thay thế main thành master)
 
+
+ 1. Thay đổi cổng (port)
+Mặc định Flask chạy trên cổng 5000. Bạn có thể đổi sang cổng khác, ví dụ 8080:
+
+python
+Sao chép
+Chỉnh sửa
+if __name__ == '__main__':
+    app.run(debug=True, port=8080)
+Khi đó, bạn sẽ truy cập bằng:
+👉 http://192.168.0.108:8080/
+
+🌐 2. Cho phép truy cập từ các máy khác trong mạng LAN
+Mặc định 127.0.0.1 chỉ cho phép truy cập từ máy nội bộ (localhost).
+Nếu bạn muốn cho máy khác trong cùng mạng Wi-Fi/LAN truy cập được thì:
+
+python
+Sao chép
+Chỉnh sửa
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)
+host='0.0.0.0': Cho phép truy cập từ mọi IP trong mạng.
+
+port=8080: Tùy chỉnh cổng.
+
+Khi đó, máy khác có thể truy cập bằng:
+👉 http://<IP-của-máy-chạy-Flask>:8080/
+(Ví dụ: http://192.168.1.5:8080/)
+
+Bạn có thể xem địa chỉ IP của máy bằng lệnh:
+
+Windows: ipconfig

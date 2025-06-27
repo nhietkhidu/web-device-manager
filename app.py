@@ -352,7 +352,7 @@ def download_backup():
     return send_file(memory_file, download_name='backup_all.zip', as_attachment=True)
 if __name__ == '__main__':
     init_users()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8089, debug=True)
 
 
 
